@@ -44,7 +44,7 @@ Steps
 
 1. Clone the repository:
 
-git clone https://github.com/sunil-offx/Projects/Project-001/Student-Management-System.git
+git clone: https://github.com/sunil-offx/Projects.git
 
 
 2. Navigate to the project directory:
