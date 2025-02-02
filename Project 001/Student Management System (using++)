@@ -1,0 +1,287 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_CONTENT 1000
+
+#define FILENAME_SIZE 20
+
+// Function Prototypes
+
+Void createEntry();
+
+Void viewEntry();
+
+Void searchEntry();
+
+Void editEntry();
+
+Void deleteEntry();
+
+int main() {
+
+    Int choice;
+
+    While (1) {
+
+        Printf(“\nPersonal Diary Application\n”);
+
+        Printf(“1. Create Entry\n”);
+
+        Printf(“2. View Entry by Date\n”);
+
+        Printf(“3. Search Entry by Keyword\n”);
+
+        Printf(“4. Edit Entry\n”);
+
+        Printf(“5. Delete Entry\n”);
+
+        Printf(“6. Exit\n”);
+
+        Printf(“Enter your choice: “);
+
+        Scanf(“%d”, &choice);
+
+        Getchar();  // To consume the newline after entering choice
+
+        Switch (choice) {
+
+            Case 1: createEntry(); break;
+
+            Case 2: viewEntry(); break;
+
+            Case 3: searchEntry(); break;
+
+            Case 4: editEntry(); break;
+
+            Case 5: deleteEntry(); break;
+
+            Case 6: printf(“Exiting application. Goodbye!\n”); exit(0);
+
+            Default: printf(“Invalid choice! Try again.\n”);
+
+        }
+
+    }
+
+    Return 0;
+
+}
+
+// Function to create a diary entry
+
+Void createEntry() {
+
+    Char date[FILENAME_SIZE], content[MAX_CONTENT];
+
+    Printf(“Enter the date (YYYY-MM-DD): “);
+
+    Scanf(“%s”, date);
+
+    Getchar(); // Consume the newline
+
+    FILE *file = fopen(date, “w”);
+
+    If (!file) {
+
+        Perror(“Error creating file”);
+
+        Return;
+
+    }
+
+               Printf(“Write your entry (end with ~ on a new line):\n”);
+
+    Fgets(content, MAX_CONTENT, stdin)
+
+    While (strcmp(content, “~\n”) != 0) {
+
+        Fputs(content, file);
+
+        Fgets(content, MAX_CONTENT, stdin);
+
+    }
+
+    Fclose(file);
+
+    Printf(“Entry saved successfully!\n”);
+
+}
+
+// Function to view a diary entry
+
+Void viewEntry() {
+
+    Char date[FILENAME_SIZE];
+
+    Char content[MAX_CONTENT];
+
+    Printf(“Enter the date of the entry to view (YYYY-MM-DD): “);
+
+    Scanf(“%s”, date);
+
+    FILE *file = fopen(date, “r”);
+
+    If (!file) {
+
+        Perror(“Error opening file”);
+
+
+
+        Return;
+
+    }
+
+    Printf(“Diary Entry for %s:\n”, date);
+
+    While (fgets(content, MAX_CONTENT, file) != NULL) {
+
+        Printf(“%s”, content)
+
+    }
+
+    Fclose(file);
+
+}
+
+// Function to search entries by keyword
+
+Void searchEntry() {
+
+    Char keyword[50], date[FILENAME_SIZE], content[MAX_CONTENT];
+
+    Printf(“Enter the keyword to search: “);
+
+    Scanf(“%s”, keyword);
+
+    System(“ls *.txt > temp_files.txt”); // List all .txt files
+
+    FILE *listFile = fopen(“temp_files.txt”, “r”);
+
+    If (!listFile) {
+
+        Perror(“Error listing files”);
+
+        Return;
+
+    }
+
+    Int found = 0;
+
+    While (fgets(date, FILENAME_SIZE, listFile) != NULL) {
+
+        // Remove newline character from filename
+
+        Date[strcspn(date, “\n”)] = ‘\0’;
+
+        FILE *file = fopen(date, “r”);
+
+        If (!file) continue;
+
+        While (fgets(content, MAX_CONTENT, file) != NULL) {
+
+            If (strstr(content, keyword) != NULL) {
+
+                Printf(“Keyword found in %s:\n%s”, date, content);
+
+                Found = 1;
+
+                Break;
+
+            }
+
+        }
+
+        Fclose(file);
+
+    }
+
+    Fclose(listFile);
+
+    Remove(“temp_files.txt”); // Clean up temp file
+
+
+
+    If (!found) {
+
+        Printf(“No entries found with the keyword ‘%s’.\n”, keyword);
+
+    }
+
+}
+
+// Function to edit a diary entry
+
+Void editEntry() {
+
+    Char date[FILENAME_SIZE], content[MAX_CONTENT];
+
+    Printf(“Enter the date of the entry to edit (YYYY-MM-DD): “);
+
+    Scanf(“%s”, date);
+
+    Getchar(); // Consume the newline
+
+    FILE *file = fopen(date, “r+”);
+
+    If (!file) {
+
+        Perror(“Error opening file”);
+
+        Return;
+
+    }
+
+    Printf(“Current content of the entry:\n”);
+
+    While (fgets(content, MAX_CONTENT, file) != NULL) {
+
+        Printf(“%s”, content)
+
+    }
+
+    Printf(“\nWrite the new content (end with ~ on a new line):\n”);
+
+    Freopen(date, “w”, file); // Clear the file and write new content
+
+    Fgets(content, MAX_CONTENT, stdin);
+
+    While (strcmp(content, “~\n”) != 0) {
+
+        Fputs(content, file);
+
+        Fgets(content, MAX_CONTENT, stdin);
+
+    }
+
+    Fclose(file);
+
+    Printf(“Entry updated successfully!\n”);
+
+}
+
+// Function to delete a diary entry
+
+Void deleteEntry() {
+
+    Char date[FILENAME_SIZE];
+
+    Printf(“Enter the date of the entry to delete (YYYY-MM-DD): “);
+
+    Scanf(“%s”, date);
+
+    If (remove(date) == 0) {
+
+        Printf(“Entry deleted successfully!\n”);
+
+    } else {
+
+        Perror(“Error deleting entry”);
+
+    }
+
+Return 0;
+
+}
+
